@@ -1,7 +1,7 @@
 # Imported as-is from
 # https://github.com/labgrid-project/meta-labgrid/commit/0bdddba7449375b809b9f470318f4538dda27283
 
-inherit setuptools3
+inherit setuptools3_legacy
 require python-snappy.inc
 
 SRC_URI[md5sum] = "0c06bbed70a8390b55a60f5ee79a27d2"

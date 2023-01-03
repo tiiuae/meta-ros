@@ -1,3 +1,3 @@
 require python-empy.inc
 
-inherit setuptools3
+inherit setuptools3_legacy
