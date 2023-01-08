@@ -4,6 +4,7 @@
 
 ROS_DISTRO = "noetic"
 
+inherit pkgconfig
 inherit ${ROS_DISTRO_TYPE}_distro
 
 # HACK until "python-qt-binding" builds
