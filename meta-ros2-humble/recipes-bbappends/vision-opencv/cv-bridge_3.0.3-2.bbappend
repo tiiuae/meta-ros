@@ -5,5 +5,5 @@ ROS_BUILDTOOL_DEPENDS:append = " \
 "
 
 EXTRA_OECMAKE:append = " \
-    -DPython3_NumPy_INCLUDE_DIR=${STAGING_DIR_NATIVE}/usr/include/python3.9/numpy \
+    -DPython3_NumPy_INCLUDE_DIR=${STAGING_DIR_NATIVE}/usr/include/python3.10/numpy \
 "
