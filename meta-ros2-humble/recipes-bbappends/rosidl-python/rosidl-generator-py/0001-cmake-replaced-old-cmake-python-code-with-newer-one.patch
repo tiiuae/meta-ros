@@ -1,4 +1,4 @@
-From 785e1992a662c1b86dc3fe95e8e52076c59c3976 Mon Sep 17 00:00:00 2001
+From 82b05157807b1456e5aa1e02775dd75c7fca6175 Mon Sep 17 00:00:00 2001
 From: Matthias Schoepfer <m.schoepfer@rethinkrobotics.com>
 Date: Tue, 13 Dec 2022 17:38:27 +0100
 Subject: [PATCH] cmake: replaced old cmake python code with newer one
@@ -14,12 +14,14 @@ This may be polished up to a point where it is upstreamable.
 Signed-off-by: Matthias Schoepfer <m.schoepfer@rethinkrobotics.com>
 
 %% original patch: 0001-cmake-replaced-old-cmake-python-code-with-newer-one.patch
+
+%% original patch: 0001-cmake-replaced-old-cmake-python-code-with-newer-one.patch
 ---
- ...idl_generator_py_generate_interfaces.cmake | 57 +++++++------------
- 1 file changed, 20 insertions(+), 37 deletions(-)
+ ...idl_generator_py_generate_interfaces.cmake | 63 ++++++++-----------
+ 1 file changed, 26 insertions(+), 37 deletions(-)
 
 diff --git a/cmake/rosidl_generator_py_generate_interfaces.cmake b/cmake/rosidl_generator_py_generate_interfaces.cmake
-index a6d8263..f89c78c 100644
+index a6d8263..980a613 100644
 --- a/cmake/rosidl_generator_py_generate_interfaces.cmake
 +++ b/cmake/rosidl_generator_py_generate_interfaces.cmake
 @@ -17,10 +17,8 @@ find_package(rosidl_runtime_c REQUIRED)
@@ -30,7 +32,7 @@ index a6d8263..f89c78c 100644
 -
  find_package(python_cmake_module REQUIRED)
 -find_package(PythonExtra MODULE REQUIRED)
-+find_package(Python3 COMPONENTS Interpreter Development NumPy)
++find_package(Python3 REQUIRED COMPONENTS Interpreter Development NumPy)
  
  # Get a list of typesupport implementations from valid rmw implementations.
  rosidl_generator_py_get_typesupports(_typesupport_impls)
@@ -46,7 +48,7 @@ index a6d8263..f89c78c 100644
  endif()
  
  # move custom command into a subdirectory to avoid multiple invocations on Windows
-@@ -143,13 +141,25 @@ set_property(
+@@ -143,13 +141,31 @@ set_property(
    PROPERTY GENERATED 1)
  
  macro(set_properties _build_type)
@@ -62,6 +64,12 @@ index a6d8263..f89c78c 100644
 +    set(Python3_EXTENSION ".so")
 +  endif()
 +  # end if rip
++  # this next step is necessary because for some reason, cmake on yocto 
++  # gives wrong Python3_SOABI
++  if ("${Python3_SOABI}" STREQUAL "")
++    set(Python3_SOABI "${PYTHON_SOABI}")
++  endif()
++  #end of Python3_SOABI fix
    set_target_properties(${_target_name} PROPERTIES
      COMPILE_OPTIONS "${_extension_compile_flags}"
      PREFIX ""
@@ -69,12 +77,12 @@ index a6d8263..f89c78c 100644
      RUNTIME_OUTPUT_DIRECTORY${_build_type} ${_output_path}
 -    OUTPUT_NAME "${PROJECT_NAME}_s__${_typesupport_impl}${PythonExtra_EXTENSION_SUFFIX}"
 -    SUFFIX "${PythonExtra_EXTENSION_EXTENSION}")
-+    OUTPUT_NAME "${PROJECT_NAME}_s__${_typesupport_impl}${Python3_SOABI}"
++    OUTPUT_NAME "${PROJECT_NAME}_s__${_typesupport_impl}.${Python3_SOABI}"
 +    SUFFIX "${Python3_EXTENSION}")
  endmacro()
  
  macro(set_lib_properties _build_type)
-@@ -174,40 +184,14 @@ add_dependencies(
+@@ -174,40 +190,14 @@ add_dependencies(
  
  target_link_libraries(
    ${_target_name_lib}
@@ -116,7 +124,7 @@ index a6d8263..f89c78c 100644
  
  rosidl_get_typesupport_target(c_typesupport_target "${rosidl_generate_interfaces_TARGET}" "rosidl_typesupport_c")
  target_link_libraries(${_target_name_lib} ${c_typesupport_target})
-@@ -246,15 +230,14 @@ foreach(_typesupport_impl ${_typesupport_impls})
+@@ -246,15 +236,14 @@ foreach(_typesupport_impl ${_typesupport_impls})
    target_link_libraries(
      ${_target_name}
      ${_target_name_lib}
@@ -135,5 +143,5 @@ index a6d8263..f89c78c 100644
  
    target_link_libraries(${_target_name} ${c_typesupport_target})
 -- 
-2.37.4
+2.38.2
 
