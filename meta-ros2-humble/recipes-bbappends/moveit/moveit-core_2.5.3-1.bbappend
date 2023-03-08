@@ -1,3 +1,10 @@
+
+FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
+
+SRC_URI:append = " \
+    file://0001-cmake-making-package-relocatable.patch \
+"
+
 ROS_BUILD_DEPENDS:append = " \
     tf2-kdl \
 "

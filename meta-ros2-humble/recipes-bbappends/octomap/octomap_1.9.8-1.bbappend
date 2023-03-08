@@ -1,5 +1,11 @@
 inherit ros_ament_cmake
 
+FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
+
+SRC_URI:append = " \
+    file://0001-cmake-do-not-leak-absolute-path-into-cmake-package-c.patch \
+"
+
 # prevent [dev-so] qa in package
 FILES:${PN}-dev += " \
     /usr/lib/liboctomap.so \

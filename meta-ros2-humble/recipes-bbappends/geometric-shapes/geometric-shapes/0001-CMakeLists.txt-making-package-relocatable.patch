@@ -1,0 +1,108 @@
+From 83975b490f025ef5776a1d88b58400ee5da2f1a1 Mon Sep 17 00:00:00 2001
+From: Matthias Schoepfer <m.schoepfer@rethinkrobotics.com>
+Date: Wed, 8 Mar 2023 14:40:00 +0100
+Subject: [PATCH] CMakeLists.txt: making package relocatable
+
+To make the package relocatable (i.e. no absolute paths
+in any .cmake file) some changes are needed. First of all, the
+usage of eigen3_cmake_module makes things worse, not better.
+Since QHull and assimp seem to have somewhat usable cmake files,
+switching over to use them.
+
+The custom QHULL set a different include path then upstream
+Qhull::qhull_r does, so fixing that as well.
+
+Signed-off-by: Matthias Schoepfer <m.schoepfer@rethinkrobotics.com>
+---
+ CMakeLists.txt | 27 +++++++++++++++------------
+ src/bodies.cpp |  2 +-
+ 2 files changed, 16 insertions(+), 13 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b686167..aadcc6f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -30,21 +30,20 @@ endif()
+ # find *absolute* paths to ASSIMP_LIBRARIES
+ # Both, pkg-config and assimp's cmake-config don't provide an absolute library path.
+ # For, pkg-config the path is in ASSIMP_PC_LIBRARY_DIRS, for cmake in ASSIMP_LIBRARY_DIRS.
+-find_library(assimp_ABS_LIBRARIES NAMES ${assimp_LIBRARIES} assimp HINTS ${assimp_LIBRARY_DIRS} ${assimp_PC_LIBRARY_DIRS})
+-set(assimp_LIBRARIES "${assimp_ABS_LIBRARIES}")
+ 
++find_package(assimp)
+ # These need to be in this order to find header files
+-find_package(eigen3_cmake_module REQUIRED)
+ find_package(Eigen3 REQUIRED)
+ 
+ find_package(ament_cmake REQUIRED)
+ find_package(assimp REQUIRED)
++find_package(Boost CONFIG REQUIRED)
+ find_package(console_bridge REQUIRED)
+ find_package(console_bridge_vendor REQUIRED)
+ find_package(eigen_stl_containers REQUIRED)
+ find_package(geometry_msgs REQUIRED)
+ find_package(OCTOMAP REQUIRED)
+-find_package(QHULL REQUIRED)
++find_package(Qhull REQUIRED)
+ find_package(random_numbers REQUIRED)
+ find_package(rclcpp REQUIRED)
+ find_package(resource_retriever REQUIRED)
+@@ -53,7 +52,6 @@ find_package(visualization_msgs REQUIRED)
+ include(ConfigExtras)
+ 
+ set(THIS_PACKAGE_EXPORT_DEPENDS
+-  eigen3_cmake_module
+   Eigen3
+   Boost
+   console_bridge
+@@ -66,8 +64,11 @@ set(THIS_PACKAGE_EXPORT_DEPENDS
+   resource_retriever
+   shape_msgs
+   visualization_msgs
++  assimp
++  Qhull
+ )
+ 
++message(WARNING "shape_msgs_TARGETS = ${shape_msgs_TARGETS}")
+ # Set VERSION from package.xml
+ ament_package_xml()
+ 
+@@ -85,13 +86,15 @@ add_library(${PROJECT_NAME} SHARED
+ )
+ set_target_properties(${PROJECT_NAME} PROPERTIES VERSION ${${PROJECT_NAME}_VERSION} WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+ target_compile_options(${PROJECT_NAME} PRIVATE ${PROJECT_COMPILE_OPTIONS})
+-ament_target_dependencies(${PROJECT_NAME}
+-  ${THIS_PACKAGE_EXPORT_DEPENDS}
+-)
+-ament_target_dependencies(${PROJECT_NAME} SYSTEM
+-  # We don't export these dependencies because their cmake is broken
+-  assimp
+-  QHULL
++target_link_libraries(${PROJECT_NAME} PUBLIC
++    Eigen3::Eigen
++    Boost::boost
++    eigen_stl_containers::eigen_stl_containers
++    ${shape_msgs_TARGETS}
++    ${visualization_msgs_TARGETS}
++    resource_retriever::resource_retriever
++    assimp
++    Qhull::qhull_r
+ )
+ 
+ if(BUILD_TESTING)
+diff --git a/src/bodies.cpp b/src/bodies.cpp
+index 0742001..761660f 100644
+--- a/src/bodies.cpp
++++ b/src/bodies.cpp
+@@ -35,7 +35,7 @@
+ #include <console_bridge/console.h>
+ 
+ extern "C" {
+-#include <libqhull_r.h>
++#include <libqhull_r/libqhull_r.h>
+ }
+ 
+ #include <boost/math/constants/constants.hpp>
+-- 
+2.39.2
+
