@@ -14,6 +14,10 @@ SECTION = "devel"
 LICENSE = "Apache-2.0 & BSD"
 LIC_FILES_CHKSUM = "file://package.xml;beginline=11;endline=11;md5=f12ef8c0445c08084ae92cf2dcb7ee92"
 
+# Enable network usage during compilation.
+# Not nice but needs to be done.
+do_compile[network] = "1"
+
 ROS_CN = "rosbag2"
 ROS_BPN = "zstd_vendor"
 
