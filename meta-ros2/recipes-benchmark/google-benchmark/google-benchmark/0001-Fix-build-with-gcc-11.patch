@@ -37,14 +37,14 @@ Signed-off-by: Martin Jansa <martin.jansa@lge.com>
  1 file changed, 1 insertion(+)
 
 diff --git a/src/benchmark_register.h b/src/benchmark_register.h
-index 61377d7..8f1bb77 100644
+index d3f4974..1d1987d 100644
 --- a/src/benchmark_register.h
 +++ b/src/benchmark_register.h
-@@ -2,6 +2,7 @@
- #define BENCHMARK_REGISTER_H
- 
+@@ -3,6 +3,7 @@
+
+ #include <limits>
  #include <vector>
 +#include <limits>
- 
+
  #include "check.h"
  
