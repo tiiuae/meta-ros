@@ -1,0 +1,35 @@
+From 787a401c8aa244904fe3c6c97e8832d48299a7e5 Mon Sep 17 00:00:00 2001
+From: Mehmet Killioglu <mehmet.killioglu@unikie.com>
+Date: Thu, 1 Jun 2023 15:59:11 +0300
+Subject: [PATCH] [PATCH] Fix curses host contamination
+
+---
+ CMakeLists.txt | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 83a4e21..3ea0bb9 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -183,7 +183,7 @@ if(CURSES_FOUND)
+     list(APPEND BT_SOURCE
+         src/controls/manual_node.cpp
+         )
+-    list(APPEND BEHAVIOR_TREE_PUBLIC_LIBRARIES ${CURSES_LIBRARIES})
++    list(APPEND BEHAVIOR_TREE_PUBLIC_LIBRARIES ncurses)
+     add_definitions(-DNCURSES_FOUND)
+ endif()
+ 
+@@ -227,8 +227,7 @@ target_compile_definitions(${BEHAVIOR_TREE_LIBRARY} PRIVATE $<$<CONFIG:Debug>:TI
+ target_include_directories(${BEHAVIOR_TREE_LIBRARY} PUBLIC
+     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/3rdparty>
+     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+-    $<INSTALL_INTERFACE:include>
+-    ${BUILD_TOOL_INCLUDE_DIRS})
++    $<INSTALL_INTERFACE:include>)
+ 
+ if( ZMQ_FOUND )
+     target_compile_definitions(${BEHAVIOR_TREE_LIBRARY} PUBLIC ZMQ_FOUND)
+-- 
+2.34.1
+
