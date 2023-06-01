@@ -32,7 +32,7 @@ index a6d8263..980a613 100644
 -
  find_package(python_cmake_module REQUIRED)
 -find_package(PythonExtra MODULE REQUIRED)
-+find_package(Python3 REQUIRED COMPONENTS Interpreter Development NumPy)
++find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
  
  # Get a list of typesupport implementations from valid rmw implementations.
  rosidl_generator_py_get_typesupports(_typesupport_impls)
