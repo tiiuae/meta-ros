@@ -8,7 +8,9 @@ FILES:${PN}-dev += " \
     ${libdir}/*.so \
 "
 
-
+FILES:${PN} += " \
+    /usr/share/fastRTPS_profiles.xsd \
+"
 # Copyright (c) 2019-2021 LG Electronics, Inc.
 # rosidl-typesupport-fastrtps-cpp/1.0.2-1-r0/recipe-sysroot/usr/share/fastrtps/cmake/fast-discovery-server-targets.cmake:70
 # expects the binary to exist:
