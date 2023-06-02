@@ -5,9 +5,9 @@
 inherit ros_distro_humble
 inherit ros_superflore_generated
 
-DESCRIPTION = "The ROS client library in C++."
+DESCRIPTION = "Package containing a prototype for lifecycle implementation"
 AUTHOR = "Ivan Paunovic <ivanpauno@ekumenlabs.com>"
-ROS_AUTHOR = "Dirk Thomas <dthomas@openrobotics.org>"
+ROS_AUTHOR = "Karsten Knese <karsten@openrobotics.org>"
 HOMEPAGE = "https://wiki.ros.org"
 SECTION = "devel"
 # Original license in package.xml, joined with "&" when multiple license tags were used:
@@ -16,75 +16,43 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://package.xml;beginline=10;endline=10;md5=12c26a18c7f493fdc7e8a93b16b7c04f"
 
 ROS_CN = "rclcpp"
-ROS_BPN = "rclcpp"
+ROS_BPN = "rclcpp_lifecycle"
 
 ROS_BUILD_DEPENDS = " \
-    ament-index-cpp \
-    builtin-interfaces \
-    libstatistics-collector \
-    rcl \
-    rcl-interfaces \
-    rcl-yaml-param-parser \
-    rcpputils \
-    rcutils \
+    lifecycle-msgs \
+    rcl-lifecycle \
+    rclcpp \
     rmw \
-    rosgraph-msgs \
-    rosidl-runtime-cpp \
-    rosidl-typesupport-c \
     rosidl-typesupport-cpp \
-    statistics-msgs \
-    tracetools \
 "
 
 ROS_BUILDTOOL_DEPENDS = " \
-    ament-cmake-gen-version-h-native \
     ament-cmake-ros-native \
-    python3-native \
 "
 
 ROS_EXPORT_DEPENDS = " \
-    ament-index-cpp \
-    builtin-interfaces \
-    libstatistics-collector \
-    rcl \
-    rcl-interfaces \
-    rcl-yaml-param-parser \
-    rcpputils \
-    rcutils \
     rmw \
-    rosgraph-msgs \
-    rosidl-runtime-cpp \
-    rosidl-typesupport-c \
-    rosidl-typesupport-cpp \
-    statistics-msgs \
-    tracetools \
 "
 
 ROS_BUILDTOOL_EXPORT_DEPENDS = ""
 
 ROS_EXEC_DEPENDS = " \
-    libstatistics-collector \
-    rcl \
-    rcl-yaml-param-parser \
-    rcpputils \
-    rcutils \
+    lifecycle-msgs \
+    rcl-lifecycle \
+    rclcpp \
     rmw \
-    statistics-msgs \
-    tracetools \
+    rosidl-typesupport-cpp \
 "
 
 # Currently informational only -- see http://www.ros.org/reps/rep-0149.html#dependency-tags.
 ROS_TEST_DEPENDS = " \
-    ament-cmake-gmock \
-    ament-cmake-google-benchmark \
     ament-cmake-gtest \
     ament-lint-auto \
     ament-lint-common \
     mimick-vendor \
     performance-test-fixture \
-    rmw \
-    rmw-implementation-cmake \
-    rosidl-default-generators \
+    rcpputils \
+    rcutils \
     test-msgs \
 "
 
@@ -95,10 +63,10 @@ DEPENDS += "${ROS_EXPORT_DEPENDS} ${ROS_BUILDTOOL_EXPORT_DEPENDS}"
 
 RDEPENDS:${PN} += "${ROS_EXEC_DEPENDS}"
 
-# matches with: https://github.com/ros2-gbp/rclcpp-release/archive/release/humble/rclcpp/16.0.1-2.tar.gz
-ROS_BRANCH ?= "branch=release/humble/rclcpp"
+# matches with: https://github.com/ros2-gbp/rclcpp-release/archive/release/humble/rclcpp_lifecycle/16.0.4-2.tar.gz
+ROS_BRANCH ?= "branch=release/humble/rclcpp_lifecycle"
 SRC_URI = "git://github.com/ros2-gbp/rclcpp-release;${ROS_BRANCH};protocol=https"
-SRCREV = "fb8d2e04ef0248cfc9c45ce1dec75e6cc1af235b"
+SRCREV = "7509977bd2dfa4e62352a54ad94909a3e0d6fdd7"
 S = "${WORKDIR}/git"
 
 ROS_BUILD_TYPE = "ament_cmake"
