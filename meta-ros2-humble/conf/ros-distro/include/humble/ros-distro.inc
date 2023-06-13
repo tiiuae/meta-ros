@@ -18,8 +18,34 @@ require conf/ros-distro/include/humble/ros-distro-recipe-blacklist.inc
 require conf/ros-distro/include/humble/ros-distro-preferred-versions.inc
 require conf/ros-distro/include/humble/ros-distro-preferred-providers.inc
 
-# Override settings from generated/superflore-ros-distro.inc here.
-
+# This is used to add "native nativesdk" to BBCLASS of each component in meta-ros2-humble/conf/layer.conf
+ROS_DEPENDS_NATIVESDK_LIBRARIES += " \
+    python3-native \
+    python3-lark-parser-native \
+    python3-netifaces-native \
+    python3-flake8-native \
+    python3-pydocstyle-native \
+    google-benchmark-native \
+    python3-pyproj-native \
+    python3-rosdistro-native \
+    python3-pytest-cov-native \
+    python3-rosdep-native \
+    python-rosdistro-native \
+    python-rosdep-native \
+    uncrustify-native \
+    iceoryx-binding-c-native \
+    iceoryx-posh-native \
+    iceoryx-utils-native \
+    console-bridge-native \
+    yaml-cpp-native \
+    libflann-native \
+    qhull-native \
+    pcl-native \
+    rclcpp-native \
+    ros2doctor-native \
+    orocos-kdl-native \
+    graphicsmagick-native \
+"
 # Since superflore doesn't know when it's generating a recipe that it will be for a build tool, it can't know that what's in
 # ROS_EXEC_DEPEND are also build tools. Manually add them here.
 ROS_SUPERFLORE_GENERATED_BUILDTOOLS += " \
@@ -36,9 +62,15 @@ ROS_SUPERFLORE_GENERATED_BUILDTOOLS += " \
     rmw-fastrtps-cpp-native \
     rmw-fastrtps-shared-cpp-native \
     rmw-native \
+    rclcpp-native \
+    rosgraph-msgs-native \
     rosidl-adapter-native \
     rosidl-cli-native \
+    rosidl-runtime-c-native \
+    rosidl-default-generators-native \
     rosidl-default-runtime-native \
+    python3-lark-parser-native \
+    rosidl-typesupport-introspection-c-native \
     rosidl-parser-native \
     rosidl-typesupport-fastrtps-c-native \
     rpyutils-native \

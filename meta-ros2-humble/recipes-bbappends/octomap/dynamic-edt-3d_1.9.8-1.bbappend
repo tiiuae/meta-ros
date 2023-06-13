@@ -11,8 +11,8 @@ inherit ros_ament_cmake
 
 #fix qa [installed-vs-shipped]
 do_install:append() {
-    install -m755 -d  ${D}/usr/share/dynamicEDT3D/cmake
-    mv ${D}/usr/share/dynamicEDT3D/*.cmake ${D}/usr/share/dynamicEDT3D/cmake
+    install -m755 -d  ${D}${datadir}/dynamicEDT3D/cmake
+    mv ${D}${datadir}/dynamicEDT3D/*.cmake ${D}${datadir}/dynamicEDT3D/cmake
 }
 
 #fix qa [dev-so]

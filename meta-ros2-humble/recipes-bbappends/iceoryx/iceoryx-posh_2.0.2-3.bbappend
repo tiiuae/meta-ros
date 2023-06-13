@@ -1,14 +1,15 @@
-# This is needed so iceoryx-posh will find the cmake files provided by
-# iceoryx-hoofs.
-EXTRA_OECMAKE:append = "-DCMAKE_MODULE_PATH=${STAGING_DIR_TARGET}/usr/lib/cmake/iceoryx_hoofs/"
+# Copyright (c) 2021 LG Electronics, Inc.
 
-# removing unneeded example, fixing installed-vs-shipped QA
+# ERROR: iceoryx-posh-0.99.7-1-r0 do_package: QA Issue: iceoryx-posh: Files/directories were installed but not shipped in any package:
+#  /usr/etc
+#  /usr/etc/roudi_config_example.toml
+# Please set FILES such that these items are packaged. Alternatively if they are unneeded, avoid installing them or delete them within do_install.
+# iceoryx-posh: 2 installed and not shipped files. [installed-vs-shipped]
+
 do_install:append() {
-    rm ${D}/usr/etc/roudi_config_example.toml
-    rm -R ${D}/usr/etc
+    rm ${D}${bindir}/../etc/roudi_config_example.toml
+    rm -R ${D}${bindir}/../etc
 }
-
-# The rest is taken from original bbappend from LG
 
 # iceoryx-binding-c/0.99.7-1-r0/recipe-sysroot/usr/lib/cmake/iceoryx_posh/iceoryx_poshTargets.cmake:109 (message):
 # expects the binary to exist:
@@ -24,5 +25,9 @@ sysroot_stage_all:append() {
 SRCREV_cpptoml = "0bfa56fc8361e1715de05709b349bc44d910c7db"
 FILESEXTRAPATHS:prepend := "${THISDIR}/${BPN}:"
 SRC_URI += "git://github.com/skystrife/cpptoml.git;name=cpptoml;destsuffix=git/cpptoml-upstream;branch=master;protocol=https \
+    file://0001-Fix-build-with-gcc-11.patch;patchdir=cpptoml-upstream \
     file://0001-cpptoml-fetch-with-bitbake-fetcher-instead-of-Extern.patch \
+    file://0001-Revert-iox-713-document-the-restrictions-on-size-and.patch \
+    file://0002-Revert-iox-14-add-member-to-ChunkHeader-reduce-its-a.patch \
+    file://0001-IceoryxPoshDeployment.cmake-change-DESTINATION_CONFIG.patch \
 "

@@ -97,3 +97,6 @@ S = "${WORKDIR}/git"
 ROS_BUILD_TYPE = "ament_cmake"
 
 inherit ros_${ROS_BUILD_TYPE}
+
+CFLAGS:container-riscv64:append = " -latomic"
+CXXFLAGS:container-riscv64:append = " -latomic"
