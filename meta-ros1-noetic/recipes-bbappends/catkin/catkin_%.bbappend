@@ -10,6 +10,9 @@ SRC_URI += " \
 
 ROS_BUILD_DEPENDS:remove = "${PYTHON_PN}-catkin-pkg"
 ROS_BUILD_DEPENDS:remove = "${PYTHON_PN}-empy"
+ROS_BUILD_DEPENDS:remove = "${PYTHON_PN}-nose"
+ROS_EXPORT_DEPENDS:remove = "${PYTHON_PN}-nose"
+
 
 ROS_BUILDTOOL_DEPENDS += " \
     ${PYTHON_PN}-catkin-pkg-native \

@@ -1,0 +1,60 @@
+From d78e18387905686b1c5d61883e80b7be457835b9 Mon Sep 17 00:00:00 2001
+From: Matthias Schoepfer <m.schoepfer@rethinkrobotics.com>
+Date: Wed, 8 Mar 2023 17:22:19 +0100
+Subject: [PATCH] cmake: making package relocatable
+
+Replacing ament_target_dependencies() where it lead to absolute paths
+ending up in the .cmake files, which contamines the cross compile.
+
+Signed-off-by: Matthias Schoepfer <m.schoepfer@rethinkrobotics.com>
+---
+ CMakeLists.txt | 25 ++++++++++---------------
+ 1 file changed, 10 insertions(+), 15 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5d9d6b7ad..edecc9fb6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -20,20 +20,7 @@ find_package(tf2_ros REQUIRED)
+ 
+ 
+ include_directories(include)
+-include_directories(SYSTEM
+-  ${EIGEN3_INCLUDE_DIRS}
+-  ${X11_INCLUDE_DIR}
+-)
+ 
+-set(THIS_PACKAGE_INCLUDE_DEPENDS
+-  rclcpp
+-  moveit_core
+-  moveit_msgs
+-  pluginlib
+-  octomap
+-  geometric_shapes
+-  Boost
+-)
+ 
+ add_library(${MOVEIT_LIB_NAME} SHARED
+   src/occupancy_map_monitor.cpp
+@@ -41,8 +28,16 @@ add_library(${MOVEIT_LIB_NAME} SHARED
+   src/occupancy_map_updater.cpp
+ )
+ set_target_properties(${MOVEIT_LIB_NAME} PROPERTIES VERSION "${${PROJECT_NAME}_VERSION}")
+-ament_target_dependencies(${MOVEIT_LIB_NAME}
+-  ${THIS_PACKAGE_INCLUDE_DEPENDS}
++target_link_libraries(${MOVEIT_LIB_NAME} PUBLIC
++  rclcpp::rclcpp
++  moveit_core::moveit_collision_detection
++  ${moveit_msgs_TARGETS}
++  pluginlib::pluginlib
++  octomap
++  octomath
++  geometric_shapes::geometric_shapes
++  Boost::boost
++  Eigen3::Eigen
+ )
+ 
+ add_executable(moveit_ros_occupancy_map_server src/occupancy_map_server.cpp)
+-- 
+2.39.2
+

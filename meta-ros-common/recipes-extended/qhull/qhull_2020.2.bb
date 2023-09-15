@@ -13,4 +13,9 @@ EXTRA_OECMAKE += "\
     -DCMAKE_SKIP_RPATH=ON \
 "
 
+# Otherwise, cmake Target file will complain about binaries not found...
+SYSROOT_DIRS:append = " \
+    ${bindir} \
+"
+
 inherit cmake

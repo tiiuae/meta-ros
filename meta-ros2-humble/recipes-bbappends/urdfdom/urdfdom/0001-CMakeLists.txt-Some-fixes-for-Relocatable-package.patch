@@ -1,0 +1,93 @@
+From 8b9b613b1ebf54dbb94c953a6cc96f24639e6583 Mon Sep 17 00:00:00 2001
+From: Matthias Schoepfer <m.schoepfer@rethinkrobotics.com>
+Date: Sat, 11 Feb 2023 11:07:22 +0100
+Subject: [PATCH] CMakeLists.txt: Some fixes for Relocatable package
+
+There are some absolute path in the generation of the .cmake files
+which ruin the creation of relocatable packages.
+Fixing:
+ * CMAKE_MODULE_PATH append instead of replacement
+ * Do not expose TinyXML Path (private instead of public)
+ * INTERFACE use relative path instead of ${CMAKE_INSTALL_INCLUDEDIR}
+
+See also
+
+https://cmake.org/cmake/help/latest/guide/importing-exporting/index.html#creating-relocatable-packages
+
+for reference.
+
+Signed-off-by: Matthias Schoepfer <m.schoepfer@rethinkrobotics.com>
+---
+ CMakeLists.txt                |  2 +-
+ cmake/urdfdom-config.cmake.in |  2 +-
+ urdf_parser/CMakeLists.txt    | 13 +++++++------
+ 3 files changed, 9 insertions(+), 8 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index afc5f9f..8fdc67c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -43,7 +43,7 @@ if(MSVC OR MSVC90 OR MSVC10)
+   set(MSVC ON)
+ endif (MSVC OR MSVC90 OR MSVC10)
+ 
+-set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
++list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+ 
+ find_package(tinyxml_vendor QUIET)
+ find_package(TinyXML)
+diff --git a/cmake/urdfdom-config.cmake.in b/cmake/urdfdom-config.cmake.in
+index d8eb93d..6c44780 100644
+--- a/cmake/urdfdom-config.cmake.in
++++ b/cmake/urdfdom-config.cmake.in
+@@ -3,7 +3,7 @@ if (@PKG_NAME@_CONFIG_INCLUDED)
+ endif()
+ set(@PKG_NAME@_CONFIG_INCLUDED TRUE)
+ 
+-set(@PKG_NAME@_INCLUDE_DIRS "${@PROJECT_NAME@_DIR}/@RELATIVE_PATH_CMAKE_DIR_TO_PREFIX@/@CMAKE_INSTALL_INCLUDEDIR@" "@TinyXML_INCLUDE_DIRS@")
++set(@PKG_NAME@_INCLUDE_DIRS "${@PROJECT_NAME@_DIR}/@RELATIVE_PATH_CMAKE_DIR_TO_PREFIX@/@CMAKE_INSTALL_INCLUDEDIR@")
+ 
+ foreach(lib @PKG_LIBRARIES@)
+   set(onelib "${lib}-NOTFOUND")
+diff --git a/urdf_parser/CMakeLists.txt b/urdf_parser/CMakeLists.txt
+index ac7c079..6807205 100644
+--- a/urdf_parser/CMakeLists.txt
++++ b/urdf_parser/CMakeLists.txt
+@@ -5,15 +5,16 @@ macro(add_urdfdom_library)
+ 
+   add_library(${add_urdfdom_library_LIBNAME} SHARED
+     ${add_urdfdom_library_SOURCES})
+-  target_include_directories(${add_urdfdom_library_LIBNAME} SYSTEM PUBLIC
++  target_include_directories(${add_urdfdom_library_LIBNAME} PRIVATE
+     ${TinyXML_INCLUDE_DIRS})
+   target_include_directories(${add_urdfdom_library_LIBNAME} PUBLIC
+     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+-    "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
++    "$<INSTALL_INTERFACE:include/urdfdom>")
+   target_link_libraries(${add_urdfdom_library_LIBNAME} PUBLIC
+     ${add_urdfdom_library_LINK}
+     ${console_bridge_link_libs}
+     ${urdfdom_headers_link_libs}
++    PRIVATE
+     ${TinyXML_LIBRARIES})
+   if(NOT CMAKE_CXX_STANDARD)
+     target_compile_features(${add_urdfdom_library_LIBNAME} PUBLIC cxx_std_14)
+@@ -72,11 +73,11 @@ add_urdfdom_library(
+ add_library(urdf_parser INTERFACE)
+ target_include_directories(urdf_parser INTERFACE
+   "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+-  "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
++  "$<INSTALL_INTERFACE:include/urdfdom>")
+ target_link_libraries(urdf_parser INTERFACE
+-  urdfdom_model
+-  urdfdom_sensor
+-  urdfdom_world)
++  urdfdom::urdfdom_model
++  urdfdom::urdfdom_sensor
++  urdfdom::urdfdom_world)
+ 
+ # --------------------------------
+ 
+-- 
+2.39.1
+

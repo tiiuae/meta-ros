@@ -1,0 +1,30 @@
+From bb5a2a3918074dfb57153c524fbb7ac8405a2917 Mon Sep 17 00:00:00 2001
+From: Matthias Schoepfer <m.schoepfer@rethinkrobotics.com>
+Date: Wed, 8 Mar 2023 16:30:43 +0100
+Subject: [PATCH] CMakeLists.txt: make package relocatable
+
+When using the detected absolute path of libm, the resulting cmake
+is contamined which is an issue if you relocate the package afterwards
+(i.e. cross compiling).
+
+Signed-off-by: Matthias Schoepfer <m.schoepfer@rethinkrobotics.com>
+---
+ src/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 1407080..711efcf 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -53,7 +53,7 @@ if(NOT WIN32)
+   if(NOT LIBM_LIBRARY)
+     message(FATAL_ERROR "Could NOT find required library LibM")
+   endif()
+-  target_link_libraries(ccd "${LIBM_LIBRARY}")
++  target_link_libraries(ccd PUBLIC m)
+   if(BUILD_SHARED_LIBS)
+     set(CCD_PKGCONFIG_EXTRA_LIBS -lm PARENT_SCOPE)
+   endif()
+-- 
+2.39.2
+

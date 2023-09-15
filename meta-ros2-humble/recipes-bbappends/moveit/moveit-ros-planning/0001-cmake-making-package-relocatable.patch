@@ -1,0 +1,193 @@
+From bcfc649dd168a7fef1f87d93fb52fb47d4517464 Mon Sep 17 00:00:00 2001
+From: Matthias Schoepfer <m.schoepfer@rethinkrobotics.com>
+Date: Wed, 8 Mar 2023 17:19:47 +0100
+Subject: [PATCH] cmake: making package relocatable
+
+Replacing ament_target_dependencies() where it lead to absolute paths
+ending up in the .cmake files, which contamines the cross compile.
+
+Signed-off-by: Matthias Schoepfer <m.schoepfer@rethinkrobotics.com>
+---
+ CMakeLists.txt                                |  2 --
+ .../CMakeLists.txt                            | 11 +++++-----
+ plan_execution/CMakeLists.txt                 | 22 ++++++++++---------
+ planning_pipeline/CMakeLists.txt              | 13 ++++++-----
+ .../CMakeLists.txt                            | 12 +++++-----
+ planning_scene_monitor/CMakeLists.txt         | 17 +++++++-------
+ robot_model_loader/CMakeLists.txt             | 13 +++++------
+ 7 files changed, 45 insertions(+), 45 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6ee451255..65d9a1eaf 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -72,8 +72,6 @@ set(THIS_PACKAGE_INCLUDE_DEPENDS
+ )
+ 
+ include_directories(${THIS_PACKAGE_INCLUDE_DIRS})
+-include_directories(SYSTEM
+-                    ${EIGEN3_INCLUDE_DIRS})
+ 
+ add_subdirectory(rdf_loader)
+ add_subdirectory(collision_plugin_loader)
+diff --git a/constraint_sampler_manager_loader/CMakeLists.txt b/constraint_sampler_manager_loader/CMakeLists.txt
+index bdfffd238..5b4e80991 100644
+--- a/constraint_sampler_manager_loader/CMakeLists.txt
++++ b/constraint_sampler_manager_loader/CMakeLists.txt
+@@ -4,14 +4,13 @@ add_library(${MOVEIT_LIB_NAME} SHARED
+     src/constraint_sampler_manager_loader.cpp)
+ 
+ set_target_properties(${MOVEIT_LIB_NAME} PROPERTIES VERSION "${${PROJECT_NAME}_VERSION}")
+-ament_target_dependencies(${MOVEIT_LIB_NAME}
+-  moveit_core
+-  rclcpp
+-  Boost
+-  pluginlib
+-)
++
+ target_link_libraries(${MOVEIT_LIB_NAME}
++  moveit_core::moveit_constraint_samplers
++  rclcpp::rclcpp
++  Boost::boost
+   moveit_rdf_loader
++  pluginlib::pluginlib
+ )
+ 
+ install(DIRECTORY include/ DESTINATION include)
+diff --git a/plan_execution/CMakeLists.txt b/plan_execution/CMakeLists.txt
+index dd4b70a38..9339d4ecc 100644
+--- a/plan_execution/CMakeLists.txt
++++ b/plan_execution/CMakeLists.txt
+@@ -5,16 +5,18 @@ add_library(${MOVEIT_LIB_NAME} SHARED
+   src/plan_execution.cpp)
+ set_target_properties(${MOVEIT_LIB_NAME} PROPERTIES VERSION "${${PROJECT_NAME}_VERSION}")
+ target_link_libraries(${MOVEIT_LIB_NAME}
+-    moveit_planning_pipeline
+-    moveit_planning_scene_monitor
+-    moveit_trajectory_execution_manager
+-)
+-ament_target_dependencies(${MOVEIT_LIB_NAME}
+-  moveit_core
+-  rclcpp
+-  Boost
+-  class_loader
+-  pluginlib
++  moveit_core::moveit_robot_trajectory
++  moveit_core::moveit_trajectory_processing
++  moveit_core::moveit_collision_detection
++  moveit_core::moveit_utils
++  ${moveit_msgs_TARGETS}
++  rclcpp::rclcpp
++  Boost::boost
++  class_loader::class_loader
++  pluginlib::pluginlib
++  moveit_planning_pipeline
++  moveit_planning_scene_monitor
++  moveit_trajectory_execution_manager
+ )
+ 
+ install(DIRECTORY include/ DESTINATION include)
+diff --git a/planning_pipeline/CMakeLists.txt b/planning_pipeline/CMakeLists.txt
+index 2e8c7c925..9b4f0545f 100644
+--- a/planning_pipeline/CMakeLists.txt
++++ b/planning_pipeline/CMakeLists.txt
+@@ -6,12 +6,13 @@ generate_export_header(${MOVEIT_LIB_NAME})
+ target_include_directories(${MOVEIT_LIB_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>)
+ set_target_properties(${MOVEIT_LIB_NAME} PROPERTIES VERSION "${${PROJECT_NAME}_VERSION}")
+ 
+-ament_target_dependencies(${MOVEIT_LIB_NAME}
+-  moveit_core
+-  moveit_msgs
+-  rclcpp
+-  Boost
+-  pluginlib
++target_link_libraries(${MOVEIT_LIB_NAME}
++  moveit_core::moveit_planning_interface
++  moveit_core::moveit_planning_request_adapter
++  ${moveit_msgs_TARGETS}
++  rclcpp::rclcpp
++  Boost::boost
++  pluginlib::pluginlib
+ )
+ 
+ install(DIRECTORY include/ DESTINATION include)
+diff --git a/planning_request_adapter_plugins/CMakeLists.txt b/planning_request_adapter_plugins/CMakeLists.txt
+index 27b92d0d1..013e12636 100644
+--- a/planning_request_adapter_plugins/CMakeLists.txt
++++ b/planning_request_adapter_plugins/CMakeLists.txt
+@@ -16,11 +16,13 @@ set(SOURCE_FILES
+ add_library(${MOVEIT_LIB_NAME} SHARED ${SOURCE_FILES})
+ 
+ set_target_properties(${MOVEIT_LIB_NAME} PROPERTIES VERSION "${${PROJECT_NAME}_VERSION}")
+-ament_target_dependencies(${MOVEIT_LIB_NAME}
+-  Boost
+-  moveit_core
+-  rclcpp
+-  pluginlib
++target_link_libraries(${MOVEIT_LIB_NAME}
++  Boost::boost
++  moveit_core::moveit_robot_state
++  moveit_core::moveit_trajectory_processing
++  moveit_core::moveit_planning_request_adapter
++  rclcpp::rclcpp
++  pluginlib::pluginlib
+ )
+ 
+ add_executable(moveit_list_request_adapter_plugins src/list.cpp)
+diff --git a/planning_scene_monitor/CMakeLists.txt b/planning_scene_monitor/CMakeLists.txt
+index 35e7bc1b6..941308a1e 100644
+--- a/planning_scene_monitor/CMakeLists.txt
++++ b/planning_scene_monitor/CMakeLists.txt
+@@ -11,16 +11,15 @@ include(GenerateExportHeader)
+ generate_export_header(${MOVEIT_LIB_NAME})
+ target_include_directories(${MOVEIT_LIB_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>)
+ set_target_properties(${MOVEIT_LIB_NAME} PROPERTIES VERSION "${${PROJECT_NAME}_VERSION}")
+-ament_target_dependencies(${MOVEIT_LIB_NAME}
+-  moveit_ros_occupancy_map_monitor
+-  message_filters
+-  urdf
+-  pluginlib
+-  rclcpp
+-  Boost
+-  moveit_msgs
+-)
++
+ target_link_libraries(${MOVEIT_LIB_NAME}
++  moveit_ros_occupancy_map_monitor
++  message_filters::message_filters
++  urdf::urdf
++  pluginlib::pluginlib
++  rclcpp::rclcpp
++  Boost::boost
++  ${moveit_msgs_TARGETS}
+   moveit_robot_model_loader
+   moveit_collision_plugin_loader
+ )
+diff --git a/robot_model_loader/CMakeLists.txt b/robot_model_loader/CMakeLists.txt
+index 45b65f64b..1cffa5872 100644
+--- a/robot_model_loader/CMakeLists.txt
++++ b/robot_model_loader/CMakeLists.txt
+@@ -6,14 +6,13 @@ endif()
+ 
+ add_library(${MOVEIT_LIB_NAME} SHARED src/robot_model_loader.cpp)
+ set_target_properties(${MOVEIT_LIB_NAME} PROPERTIES VERSION "${${PROJECT_NAME}_VERSION}")
+-ament_target_dependencies(${MOVEIT_LIB_NAME}
+-  rclcpp
+-  urdf
+-  Boost
+-  moveit_core
+-  moveit_msgs
+-)
++
+ target_link_libraries(${MOVEIT_LIB_NAME}
++  rclcpp::rclcpp
++  urdf::urdf
++  Boost::boost
++  moveit_core::moveit_robot_model
++  ${moveit_msgs_TARGETS}
+   moveit_rdf_loader
+   moveit_kinematics_plugin_loader
+ )
+-- 
+2.39.2
+

@@ -1,0 +1,58 @@
+From 2b7bfc276e91d40235c13b9e296b6427bbf85223 Mon Sep 17 00:00:00 2001
+From: Matthias Schoepfer <m.schoepfer@rethinkrobotics.com>
+Date: Wed, 8 Mar 2023 17:37:39 +0100
+Subject: [PATCH] cmake: do not leak absolute path into cmake package config
+
+The absolute path is leaked into the cmake package config file which
+will break relocation and also contamins any cross compiled packages.
+
+Signed-off-by: Matthias Schoepfer <m.schoepfer@rethinkrobotics.com>
+---
+ CMakeLists.txt          | 8 ++++----
+ octomap-config.cmake.in | 4 ++--
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 395f9cd7..c16702ac 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -90,8 +90,8 @@ add_custom_target(uninstall
+ export(PACKAGE octomap)
+  
+ # Create a octomap-config.cmake file for the use from the build tree
+-set(OCTOMAP_INCLUDE_DIRS "${INCLUDE_DIRS}")
+-set(OCTOMAP_LIB_DIR "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
++set(OCTOMAP_INCLUDE_DIRS "include")
++set(OCTOMAP_LIB_DIR "lib")
+ # Set library names as absolute paths
+ # Windows, spec. MSVC requires the .lib suffix for imported libs
+ IF(WIN32)
+@@ -127,8 +127,8 @@ WRITE_BASIC_PACKAGE_VERSION_FILE(
+ 
+ # Create a octomap-config.cmake file for the use from the install tree
+ # and install it
+-set(OCTOMAP_INCLUDE_DIRS "${CMAKE_INSTALL_FULL_INCLUDEDIR}")
+-set(OCTOMAP_LIB_DIR "${CMAKE_INSTALL_FULL_LIBDIR}")
++set(OCTOMAP_INCLUDE_DIRS "include")
++set(OCTOMAP_LIB_DIR "lib")
+ #set(OCTOMAP_CMAKE_DIR "${INSTALL_DATA_DIR}/FooBar/CMake")
+ 
+ set(OCTOMAP_INCLUDE_TARGETS
+diff --git a/octomap-config.cmake.in b/octomap-config.cmake.in
+index 0bcacc7d..7fdf6bf3 100644
+--- a/octomap-config.cmake.in
++++ b/octomap-config.cmake.in
+@@ -35,8 +35,8 @@ set_and_check(OCTOMAP_LIBRARY_DIRS "@PACKAGE_OCTOMAP_LIB_DIR@")
+ 
+ # Set library names
+ set(OCTOMAP_LIBRARIES
+-  "@PACKAGE_OCTOMAP_LIB_DIR@/@OCTOMAP_LIBRARY@"
+-  "@PACKAGE_OCTOMAP_LIB_DIR@/@OCTOMATH_LIBRARY@"
++  "octomap"
++  "octomath"
+ )
+ 
+ # Additionally set the variables using a lower-case project name.
+-- 
+2.39.2
+
