@@ -39,10 +39,10 @@ DEPENDS += "${ROS_EXPORT_DEPENDS} ${ROS_BUILDTOOL_EXPORT_DEPENDS}"
 
 RDEPENDS:${PN} += "${ROS_EXEC_DEPENDS}"
 
-# matches with: https://github.com/ros2-gbp/fastcdr-release/archive/release/humble/fastcdr/1.0.24-2.tar.gz
+# matches with: https://github.com/ros2-gbp/fastcdr-release/archive/release/humble/fastcdr/1.1.0-1.tar.gz
 ROS_BRANCH ?= "branch=release/rolling/fastcdr"
 SRC_URI = "git://github.com/ros2-gbp/fastcdr-release;${ROS_BRANCH};protocol=https"
-SRCREV = "12f4509d762a21934db6946e3acfa20883e99070"
+SRCREV = "c61092c290ca7d48dca57d628ee5c1ffdbc70e3e"
 S = "${WORKDIR}/git"
 
 ROS_BUILD_TYPE = "cmake"

@@ -5,7 +5,7 @@
 inherit ros_distro_humble
 inherit ros_superflore_generated
 
-DESCRIPTION = "Implement the ROS middleware interface using introspection type support."
+DESCRIPTION = "Code shared on static and dynamic type support of rmw_fastrtps_cpp."
 AUTHOR = "Michel Hidalgo <michel@ekumenlabs.com>"
 ROS_AUTHOR = "Ricardo González"
 HOMEPAGE = "https://wiki.ros.org"
@@ -16,7 +16,7 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://package.xml;beginline=9;endline=9;md5=12c26a18c7f493fdc7e8a93b16b7c04f"
 
 ROS_CN = "rmw_fastrtps"
-ROS_BPN = "rmw_fastrtps_dynamic_cpp"
+ROS_BPN = "rmw_fastrtps_shared_cpp"
 
 ROS_BUILD_DEPENDS = " \
     fastcdr \
@@ -26,12 +26,9 @@ ROS_BUILD_DEPENDS = " \
     rcutils \
     rmw \
     rmw-dds-common \
-    rmw-fastrtps-shared-cpp \
-    rosidl-runtime-c \
-    rosidl-typesupport-fastrtps-c \
-    rosidl-typesupport-fastrtps-cpp \
     rosidl-typesupport-introspection-c \
     rosidl-typesupport-introspection-cpp \
+    tracetools \
 "
 
 ROS_BUILDTOOL_DEPENDS = " \
@@ -47,12 +44,9 @@ ROS_EXPORT_DEPENDS = " \
     rcutils \
     rmw \
     rmw-dds-common \
-    rmw-fastrtps-shared-cpp \
-    rosidl-runtime-c \
-    rosidl-typesupport-fastrtps-c \
-    rosidl-typesupport-fastrtps-cpp \
     rosidl-typesupport-introspection-c \
     rosidl-typesupport-introspection-cpp \
+    tracetools \
 "
 
 ROS_BUILDTOOL_EXPORT_DEPENDS = " \
@@ -63,11 +57,9 @@ ROS_EXEC_DEPENDS = ""
 
 # Currently informational only -- see http://www.ros.org/reps/rep-0149.html#dependency-tags.
 ROS_TEST_DEPENDS = " \
-    ament-cmake-gtest \
     ament-lint-auto \
     ament-lint-common \
     osrf-testing-tools-cpp \
-    test-msgs \
 "
 
 DEPENDS = "${ROS_BUILD_DEPENDS} ${ROS_BUILDTOOL_DEPENDS}"
@@ -77,10 +69,10 @@ DEPENDS += "${ROS_EXPORT_DEPENDS} ${ROS_BUILDTOOL_EXPORT_DEPENDS}"
 
 RDEPENDS:${PN} += "${ROS_EXEC_DEPENDS}"
 
-# matches with: https://github.com/ros2-gbp/rmw_fastrtps-release/archive/release/humble/rmw_fastrtps_dynamic_cpp/6.2.1-2.tar.gz
-ROS_BRANCH ?= "branch=release/humble/rmw_fastrtps_dynamic_cpp"
+# matches with: https://github.com/ros2-gbp/rmw_fastrtps-release/archive/release/humble/rmw_fastrtps_shared_cpp/6.2.3-1.tar.gz
+ROS_BRANCH ?= "branch=release/humble/rmw_fastrtps_shared_cpp"
 SRC_URI = "git://github.com/ros2-gbp/rmw_fastrtps-release;${ROS_BRANCH};protocol=https"
-SRCREV = "741bb9db874a26f50ddcf79e4c8d1f312204ed27"
+SRCREV = "4033d551a396b04cca06f77a3b5f0cccaeb617e5"
 S = "${WORKDIR}/git"
 
 ROS_BUILD_TYPE = "ament_cmake"

@@ -55,10 +55,10 @@ DEPENDS += "${ROS_EXPORT_DEPENDS} ${ROS_BUILDTOOL_EXPORT_DEPENDS}"
 
 RDEPENDS:${PN} += "${ROS_EXEC_DEPENDS}"
 
-# matches with: https://github.com/ros2-gbp/fastrtps-release/archive/release/humble/fastrtps/2.6.2-1.tar.gz
+# matches with: https://github.com/ros2-gbp/fastrtps-release/archive/release/rolling/fastrtps/2.11.2-1.tar.gz
 ROS_BRANCH ?= "branch=release/rolling/fastrtps"
 SRC_URI = "git://github.com/ros2-gbp/fastrtps-release;${ROS_BRANCH};protocol=https"
-SRCREV = "57bbde99931362c75f2a97a69d893c5abd174e90"
+SRCREV = "19e1aaa21b1cc53f1e66e18ce0c4e9800052ca3b"
 S = "${WORKDIR}/git"
 
 ROS_BUILD_TYPE = "cmake"

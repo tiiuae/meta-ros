@@ -5,9 +5,9 @@
 inherit ros_distro_humble
 inherit ros_superflore_generated
 
-DESCRIPTION = "Implement the ROS middleware interface using eProsima FastRTPS static code generation in C++."
+DESCRIPTION = "Generate the ROS interfaces in Python."
 AUTHOR = "Michel Hidalgo <michel@ekumenlabs.com>"
-ROS_AUTHOR = "Ricardo González"
+ROS_AUTHOR = "Esteve Fernandez"
 HOMEPAGE = "https://wiki.ros.org"
 SECTION = "devel"
 # Original license in package.xml, joined with "&" when multiple license tags were used:
@@ -15,66 +15,60 @@ SECTION = "devel"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://package.xml;beginline=9;endline=9;md5=12c26a18c7f493fdc7e8a93b16b7c04f"
 
-ROS_CN = "rmw_fastrtps"
-ROS_BPN = "rmw_fastrtps_cpp"
+ROS_CN = "rosidl_python"
+ROS_BPN = "rosidl_generator_py"
 
 ROS_BUILD_DEPENDS = " \
-    fastcdr \
-    fastrtps \
-    fastrtps-cmake-module \
-    rcpputils \
-    rcutils \
-    rmw \
-    rmw-dds-common \
-    rmw-fastrtps-shared-cpp \
     rosidl-runtime-c \
-    rosidl-runtime-cpp \
-    rosidl-typesupport-fastrtps-c \
-    rosidl-typesupport-fastrtps-cpp \
-    tracetools \
 "
 
 ROS_BUILDTOOL_DEPENDS = " \
-    ament-cmake-ros-native \
-    fastrtps-cmake-module-native \
-    rosidl-cmake-native \
+    ament-cmake-native \
 "
 
 ROS_EXPORT_DEPENDS = " \
-    fastcdr \
-    fastrtps \
-    fastrtps-cmake-module \
-    rcutils \
     rmw \
-    rmw-dds-common \
-    rmw-fastrtps-shared-cpp \
-    rosidl-runtime-c \
-    rosidl-runtime-cpp \
-    rosidl-typesupport-fastrtps-c \
-    rosidl-typesupport-fastrtps-cpp \
-    tracetools \
 "
 
 ROS_BUILDTOOL_EXPORT_DEPENDS = " \
     ament-cmake-native \
+    ament-index-python-native \
+    python-cmake-module-native \
     rosidl-cmake-native \
+    rosidl-generator-c-native \
+    rosidl-typesupport-c-native \
+    rosidl-typesupport-interface-native \
 "
 
 ROS_EXEC_DEPENDS = " \
-    rcpputils \
-    rcutils \
-    rmw \
-    rmw-fastrtps-shared-cpp \
-    tracetools \
+    ament-index-python \
+    python3-numpy \
+    rosidl-cli \
+    rosidl-generator-c \
+    rosidl-parser \
+    rosidl-runtime-c \
+    rpyutils \
 "
 
 # Currently informational only -- see http://www.ros.org/reps/rep-0149.html#dependency-tags.
 ROS_TEST_DEPENDS = " \
-    ament-cmake-gtest \
+    ament-cmake-pytest \
+    ament-index-python \
     ament-lint-auto \
     ament-lint-common \
-    osrf-testing-tools-cpp \
-    test-msgs \
+    python-cmake-module \
+    python3-numpy \
+    python3-pytest \
+    rmw \
+    rosidl-cmake \
+    rosidl-generator-c \
+    rosidl-generator-cpp \
+    rosidl-parser \
+    rosidl-typesupport-c \
+    rosidl-typesupport-fastrtps-c \
+    rosidl-typesupport-introspection-c \
+    rpyutils \
+    test-interface-files \
 "
 
 DEPENDS = "${ROS_BUILD_DEPENDS} ${ROS_BUILDTOOL_DEPENDS}"
@@ -84,10 +78,10 @@ DEPENDS += "${ROS_EXPORT_DEPENDS} ${ROS_BUILDTOOL_EXPORT_DEPENDS}"
 
 RDEPENDS:${PN} += "${ROS_EXEC_DEPENDS}"
 
-# matches with: https://github.com/ros2-gbp/rmw_fastrtps-release/archive/release/humble/rmw_fastrtps_cpp/6.2.1-2.tar.gz
-ROS_BRANCH ?= "branch=release/humble/rmw_fastrtps_cpp"
-SRC_URI = "git://github.com/ros2-gbp/rmw_fastrtps-release;${ROS_BRANCH};protocol=https"
-SRCREV = "5cfbea66f3a8c228a0580ab95d393b93751e5482"
+# matches with: https://github.com/ros2-gbp/rosidl_python-release/archive/release/humble/rosidl_generator_py/0.14.4-1.tar.gz
+ROS_BRANCH ?= "branch=release/humble/rosidl_generator_py"
+SRC_URI = "git://github.com/ros2-gbp/rosidl_python-release;${ROS_BRANCH};protocol=https"
+SRCREV = "6536f1adb47385517e602cf9f3d6237fe1607568"
 S = "${WORKDIR}/git"
 
 ROS_BUILD_TYPE = "ament_cmake"
