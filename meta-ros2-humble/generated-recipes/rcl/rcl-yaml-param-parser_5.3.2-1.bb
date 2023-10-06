@@ -61,10 +61,10 @@ DEPENDS += "${ROS_EXPORT_DEPENDS} ${ROS_BUILDTOOL_EXPORT_DEPENDS}"
 
 RDEPENDS:${PN} += "${ROS_EXEC_DEPENDS}"
 
-# matches with: https://github.com/ros2-gbp/rcl-release/archive/release/humble/rcl_yaml_param_parser/5.3.1-1.tar.gz
+# matches with: https://github.com/ros2-gbp/rcl-release/archive/release/humble/rcl_yaml_param_parser/5.3.2-1.tar.gz
 ROS_BRANCH ?= "branch=release/humble/rcl_yaml_param_parser"
 SRC_URI = "git://github.com/ros2-gbp/rcl-release;${ROS_BRANCH};protocol=https"
-SRCREV = "d600733721b732e5802263efe89387fbcc3056d1"
+SRCREV = "cf81f82facfdeb8b5f77b5bb13d99b957d5f92d4"
 S = "${WORKDIR}/git"
 
 ROS_BUILD_TYPE = "ament_cmake"
