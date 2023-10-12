@@ -23,7 +23,6 @@ ROS_BUILD_DEPENDS = " \
     foonathan-memory-vendor \
     libtinyxml2 \
     openssl \
-    python3 \
 "
 
 ROS_BUILDTOOL_DEPENDS = " \
@@ -35,7 +34,6 @@ ROS_EXPORT_DEPENDS = " \
     foonathan-memory-vendor \
     libtinyxml2 \
     openssl \
-    python3 \
 "
 
 ROS_BUILDTOOL_EXPORT_DEPENDS = ""
@@ -45,7 +43,6 @@ ROS_EXEC_DEPENDS = " \
     foonathan-memory-vendor \
     libtinyxml2 \
     openssl \
-    python3 \
 "
 
 # Currently informational only -- see http://www.ros.org/reps/rep-0149.html#dependency-tags.
