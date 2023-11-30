@@ -22,7 +22,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
                     file://package.json;md5=b43f590b0d3f887322788d4522c747ad"
 
 SRC_URI = " \
-    git://github.com/uncrustify/uncrustify.git;protocol=https;branch=uncrustify-0.75.1 \
+    git://github.com/tiiuae/uncrustify.git;protocol=https;branch=uncrustify-0.75.x \
     "
 SRCREV = "639856e61770c785b5b85612e9a431d720fd8e4f"
 
