@@ -56,8 +56,11 @@ DEPENDS += "${ROS_EXPORT_DEPENDS} ${ROS_BUILDTOOL_EXPORT_DEPENDS}"
 RDEPENDS:${PN} += "${ROS_EXEC_DEPENDS}"
 
 # matches with: https://github.com/ros2-gbp/fastrtps-release/archive/release/rolling/fastrtps/2.10.1-1.tar.gz
+# 05042024: the needed SHA is not available in the ROS_BRANCH anymore
+# so using nobranch=1 temporarily
+NO_BRANCH ?= "nobranch=1"
 ROS_BRANCH ?= "branch=release/rolling/fastrtps"
-SRC_URI = "git://github.com/ros2-gbp/fastrtps-release;${ROS_BRANCH};protocol=https"
+SRC_URI = "git://github.com/ros2-gbp/fastrtps-release;${NO_BRANCH};protocol=https"
 SRCREV = "57bbde99931362c75f2a97a69d893c5abd174e90"
 S = "${WORKDIR}/git"
 

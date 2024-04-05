@@ -40,8 +40,11 @@ DEPENDS += "${ROS_EXPORT_DEPENDS} ${ROS_BUILDTOOL_EXPORT_DEPENDS}"
 RDEPENDS:${PN} += "${ROS_EXEC_DEPENDS}"
 
 # matches with: https://github.com/ros2-gbp/fastcdr-release/archive/release/rolling/fastcdr/1.0.26-3.tar.gz
+# 05042024: the needed SHA is not available in the ROS_BRANCH anymore
+# so using nobranch=1 temporarily
+NO_BRANCH ?= "nobranch=1"
 ROS_BRANCH ?= "branch=release/rolling/fastcdr"
-SRC_URI = "git://github.com/ros2-gbp/fastcdr-release;${ROS_BRANCH};protocol=https"
+SRC_URI = "git://github.com/ros2-gbp/fastcdr-release;${NO_BRANCH};protocol=https"
 SRCREV = "12f4509d762a21934db6946e3acfa20883e99070"
 S = "${WORKDIR}/git"
 
